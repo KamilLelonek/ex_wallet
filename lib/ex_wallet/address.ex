@@ -1,4 +1,4 @@
-defmodule ExWallet.Wallet do
+defmodule ExWallet.Address do
   alias ExWallet.Base58.{Check, Encode}
   alias ExWallet.KeyPair
 
@@ -7,7 +7,7 @@ defmodule ExWallet.Wallet do
     test: <<0x6F>>
   }
 
-  def address(private_key, network \\ :main) do
+  def calculate(private_key, network \\ :main) do
     private_key
     |> KeyPair.to_public_key()
     |> hash_160()

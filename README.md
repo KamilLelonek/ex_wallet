@@ -63,11 +63,11 @@ This is a regular `Base58` encoding according to its alphabet:
     iex(9)> ExWallet.Base58.Encode.call("k")
     "2r"
 
-### Wallet
+### Address
 
-**`address/1`**
+**`calculate/1`**
 
 Finally, you can generate a Bitcoin Address using your _private key_:
 
-    iex(10)> ExWallet.Wallet.address(private_key)
+    iex(10)> ExWallet.Address.calculate(private_key)
     "112NcehZWxu8WMTRXYLmKG9xiW1bP6gVyB"
