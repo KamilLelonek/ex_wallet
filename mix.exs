@@ -20,7 +20,9 @@ defmodule ExWallet.MixProject do
   end
 
   defp deps do
-    []
+    [
+      {:poison, "~> 3.1"}
+    ]
   end
 
   defp elixirc_paths(:test), do: ["lib", "test/support"]
