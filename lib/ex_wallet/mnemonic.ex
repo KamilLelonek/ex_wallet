@@ -25,11 +25,11 @@ defmodule ExWallet.Mnemonic do
     |> from_private_key()
   end
 
-  def from_private_key(bytes_or_string) do
-    bytes_or_string
+  def from_private_key(binary) do
+    binary
     |> String.valid?()
-    |> normalize(bytes_or_string)
-    |> with_checksum()
+    |> normalize(binary)
+    |> append_checksum()
     |> mnemonic()
   end
 
@@ -41,7 +41,7 @@ defmodule ExWallet.Mnemonic do
   end
 
   defp normalize(true, string), do: Base.decode16!(string, case: :mixed)
-  defp normalize(false, bytes), do: bytes
+  defp normalize(false, binary), do: binary
 
   defp random_bytes(private_key_length) do
     private_key_length
@@ -51,11 +51,11 @@ defmodule ExWallet.Mnemonic do
 
   defp bits_to_bytes(bits), do: div(bits, 8)
 
-  defp with_checksum(bytes) do
+  defp append_checksum(bytes) do
     bytes
     |> sha256()
     |> to_binary_string()
-    |> checksum(bytes)
+    |> take_first(bytes)
     |> append_to_binary_string(bytes)
   end
 
@@ -76,7 +76,7 @@ defmodule ExWallet.Mnemonic do
     |> String.pad_leading(leading_zeros, "0")
   end
 
-  defp checksum(binary_string, bytes) do
+  defp take_first(binary_string, bytes) do
     bytes
     |> checksum_range()
     |> slice(binary_string)
@@ -84,11 +84,11 @@ defmodule ExWallet.Mnemonic do
 
   defp checksum_range(bytes) do
     bytes
-    |> checksum()
+    |> checksum_length()
     |> range()
   end
 
-  defp checksum(entropy_bytes) do
+  defp checksum_length(entropy_bytes) do
     entropy_bytes
     |> bit_size()
     |> div(32)
