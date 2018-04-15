@@ -2,7 +2,10 @@
 
 [![Build Status](https://travis-ci.com/KamilLelonek/ex_wallet.svg?token=f2crVURbhKfHsgpJjedn&branch=master)](https://travis-ci.com/KamilLelonek/ex_wallet)
 
-The intent of this repository is described in the following article: https://blog.lelonek.me/how-to-calculate-bitcoin-address-in-elixir-68939af4f0e9
+The intent of this repository is described in the following articles:
+
+- https://k.lelonek.me/bitcoin-address
+- https://k.lelonek.me/bitcoin-mnemonic-phrase
 
 ## Usage
 
@@ -41,7 +44,7 @@ iex(2)> ExWallet.KeyPair.to_public_key(private_key)
 When you have a message to sign, you can do that with your _private key_.
 
 ```elixir
-iex(3)> ExWallet.Signature.generate(private_key, "message")
+iex(3)> signature = ExWallet.Signature.generate(private_key, "message")
 <<48, 68, 2, 32, 83, 249, 55, 184, 125, 161, 204, 82, 253, 84, 35, 212, 65, 85,
   253, 107, 75, 142, 48, 105, 32, 132, 73, 176, 16, 183, 163, 210, 106, 22, 137,
   167, 2, 32, 118, 205, 247, 213, 157, 88, 249, 140, 83, 85, 180, 122, ...>>
@@ -77,7 +80,7 @@ iex(9)> ExWallet.Base58.Encode.call("k")
 
 **`calculate/1`**
 
-Finally, you can generate a Bitcoin Address using your _private key_:
+You are able to calculate a Bitcoin Address using your _private key_:
 
 ```elixir
 iex(10)> ExWallet.Address.calculate(private_key)
@@ -88,7 +91,7 @@ iex(10)> ExWallet.Address.calculate(private_key)
 
 **`generate/1`**
 
-You can generate a random mnemonic words for the given entropy length.
+You can generate a random mnemonic words for the given entropy length (`256` is the default).
 
 ```elixir
 iex(11)> ExWallet.Mnemonic.generate()
@@ -100,7 +103,7 @@ iex(12)> mnemonic = ExWallet.Mnemonic.generate(128)
 
 **`from_entropy/1`**
 
-However, if you already have some random entropy, you can generate a mnemonic for it:
+However, if you already have some random entropy, you can derive a mnemonic from it:
 
 ```elixir
 iex(13)> entropy = "00000000000000000000000000000000"
@@ -112,7 +115,7 @@ iex(14)> ExWallet.Mnemonic.from_entropy(entropy)
 
 **`to_entropy/1`**
 
-And, once you have your mnemonic generated, you can turn it back into the corresponding sequence of bytes:
+And, once you have your mnemonic words, you can turn them back into the corresponding sequence of bytes:
 
 ```elixir
 iex(14)> ExWallet.Mnemonic.to_entropy(mnemonic)
