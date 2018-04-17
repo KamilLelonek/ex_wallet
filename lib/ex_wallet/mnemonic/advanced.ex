@@ -1,12 +1,7 @@
 defmodule ExWallet.Mnemonic.Advanced do
-  @words :ex_wallet
-         |> :code.priv_dir()
-         |> Path.join("words.txt")
-         |> File.stream!()
-         |> Stream.map(&String.trim/1)
-         |> Enum.to_list()
+  alias ExWallet.Mnemonic
 
-  @allowed_lengths [128, 160, 192, 224, 256]
+  @allowed_lengths Mnemonic.allowed_lengths()
 
   @leading_zeros_for_mnemonic 8
   @leading_zeros_of_mnemonic 11
@@ -21,7 +16,7 @@ defmodule ExWallet.Mnemonic.Advanced do
 
   def generate(entropy_length) do
     entropy_length
-    |> random_bytes()
+    |> Mnemonic.random_bytes()
     |> from_entropy()
   end
 
@@ -43,23 +38,13 @@ defmodule ExWallet.Mnemonic.Advanced do
   defp normalize(true, string), do: Base.decode16!(string, case: :mixed)
   defp normalize(false, binary), do: binary
 
-  defp random_bytes(entropy_length) do
-    entropy_length
-    |> bits_to_bytes()
-    |> :crypto.strong_rand_bytes()
-  end
-
-  defp bits_to_bytes(bits), do: div(bits, 8)
-
   defp append_checksum(bytes) do
     bytes
-    |> sha256()
+    |> Mnemonic.sha256()
     |> to_binary_string()
     |> take_first(bytes)
     |> append_to_binary_string(bytes)
   end
-
-  defp sha256(data), do: :crypto.hash(:sha256, data)
 
   defp to_binary_string(bytes) do
     bytes
@@ -84,14 +69,8 @@ defmodule ExWallet.Mnemonic.Advanced do
 
   defp checksum_range(bytes) do
     bytes
-    |> checksum_length()
+    |> Mnemonic.checksum_length()
     |> range()
-  end
-
-  defp checksum_length(entropy_bytes) do
-    entropy_bytes
-    |> bit_size()
-    |> div(32)
   end
 
   defp range(length), do: Range.new(0, length - 1)
@@ -114,7 +93,7 @@ defmodule ExWallet.Mnemonic.Advanced do
     |> pick_word()
   end
 
-  defp pick_word(index), do: Enum.at(@words, index)
+  defp pick_word(index), do: Enum.at(Mnemonic.words(), index)
 
   defp binary_indicies(mnemonic) do
     mnemonic
@@ -124,7 +103,7 @@ defmodule ExWallet.Mnemonic.Advanced do
   end
 
   defp word_binary_index(word) do
-    @words
+    Mnemonic.words()
     |> Enum.find_index(&(&1 == word))
     |> binary_of_index()
   end

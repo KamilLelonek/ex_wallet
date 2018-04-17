@@ -4,8 +4,8 @@
 
 The intent of this repository is described in the following articles:
 
-- https://k.lelonek.me/bitcoin-address
-- https://k.lelonek.me/bitcoin-mnemonic-phrase
+* https://k.lelonek.me/bitcoin-address
+* https://k.lelonek.me/bitcoin-mnemonic-phrase
 
 ## Usage
 
@@ -87,17 +87,17 @@ iex(10)> ExWallet.Address.calculate(private_key)
 "112NcehZWxu8WMTRXYLmKG9xiW1bP6gVyB"
 ```
 
-### Mnemonic
+### Mnemonic.Advanced
 
 **`generate/1`**
 
 You can generate a random mnemonic words for the given entropy length (`256` is the default).
 
 ```elixir
-iex(11)> ExWallet.Mnemonic.generate()
+iex(11)> ExWallet.Mnemonic.Advanced.generate()
 "quote plunge gloom vital rookie kick tiger drastic prize lab brass present play man cinnamon perfect manual deer turkey inspire exit story multiply today"
 
-iex(12)> mnemonic = ExWallet.Mnemonic.generate(128)
+iex(12)> mnemonic = ExWallet.Mnemonic.Advanced.generate(128)
 "actor quantum tunnel fish speak model attack type hint crisp boss zone"
 ```
 
@@ -108,7 +108,7 @@ However, if you already have some random entropy, you can derive a mnemonic from
 ```elixir
 iex(13)> entropy = "00000000000000000000000000000000"
 "00000000000000000000000000000000"
-iex(14)> ExWallet.Mnemonic.from_entropy(entropy)
+iex(14)> ExWallet.Mnemonic.Advanced.from_entropy(entropy)
 <<0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0>>
 "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about"
 ```
@@ -118,6 +118,6 @@ iex(14)> ExWallet.Mnemonic.from_entropy(entropy)
 And, once you have your mnemonic words, you can turn them back into the corresponding sequence of bytes:
 
 ```elixir
-iex(14)> ExWallet.Mnemonic.to_entropy(mnemonic)
+iex(14)> ExWallet.Mnemonic.Advanced.to_entropy(mnemonic)
 <<2, 181, 235, 170, 43, 221, 13, 29, 3, 159, 94, 107, 198, 116, 104, 255>>
 ```
