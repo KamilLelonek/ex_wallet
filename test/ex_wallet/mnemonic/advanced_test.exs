@@ -1,7 +1,7 @@
-defmodule ExWallet.MnemonicTest do
+defmodule ExWallet.Mnemonic.AdvancedTest do
   use ExUnit.Case, async: true
 
-  alias ExWallet.Mnemonic
+  alias ExWallet.Mnemonic.Advanced
 
   @vector "test/fixtures/vectors.json"
           |> File.read!()
@@ -10,56 +10,56 @@ defmodule ExWallet.MnemonicTest do
 
   test "should not generate mnemonic words with invalid entropy length" do
     assert {:error, "Entropy length must be one of [128, 160, 192, 224, 256]"} =
-             Mnemonic.generate(9)
+             Advanced.generate(9)
   end
 
   test "should validate vector mnemonics" do
     assert Enum.all?(@vector, fn [entropy, mnemonic | _] ->
-             assert Mnemonic.from_entropy(entropy) == mnemonic
+             assert Advanced.from_entropy(entropy) == mnemonic
 
              assert mnemonic
-                    |> Mnemonic.to_entropy()
+                    |> Advanced.to_entropy()
                     |> Base.encode16(case: :lower) == entropy
            end)
   end
 
   test "should generate a random mnemonic" do
     assert 12 =
-             Mnemonic.generate(128)
+             Advanced.generate(128)
              |> String.split()
              |> length()
 
     assert 15 =
-             Mnemonic.generate(160)
+             Advanced.generate(160)
              |> String.split()
              |> length()
 
     assert 18 =
-             Mnemonic.generate(192)
+             Advanced.generate(192)
              |> String.split()
              |> length()
 
     assert 21 =
-             Mnemonic.generate(224)
+             Advanced.generate(224)
              |> String.split()
              |> length()
 
     assert 24 =
-             Mnemonic.generate(256)
+             Advanced.generate(256)
              |> String.split()
              |> length()
 
     assert 24 =
-             Mnemonic.generate()
+             Advanced.generate()
              |> String.split()
              |> length()
   end
 
   test "should generate and recover entropy" do
-    mnemonic = Mnemonic.generate()
-    entropy = Mnemonic.to_entropy(mnemonic)
+    mnemonic = Advanced.generate()
+    entropy = Advanced.to_entropy(mnemonic)
 
-    assert ^mnemonic = Mnemonic.from_entropy(entropy)
+    assert ^mnemonic = Advanced.from_entropy(entropy)
   end
 
   test "should work booth on encoded and decoded entropies" do
@@ -69,6 +69,6 @@ defmodule ExWallet.MnemonicTest do
 
     entropy_encoded = Base.encode16(entropy_decoded, case: :lower)
 
-    assert Mnemonic.from_entropy(entropy_decoded) == Mnemonic.from_entropy(entropy_encoded)
+    assert Advanced.from_entropy(entropy_decoded) == Advanced.from_entropy(entropy_encoded)
   end
 end
