@@ -65,9 +65,9 @@ defmodule ExWallet.Mnemonic.Simple do
   defp word_index(word), do: Enum.find_index(Mnemonic.words(), &(&1 == word))
 
   defp bytes(indicies) do
-    indicies
-    |> Enum.map(&<<&1::11>>)
-    |> Enum.into(<<>>)
+    for index <- indicies, into: <<>> do
+      <<index::11>>
+    end
   end
 
   defp entropy(sha256) do
