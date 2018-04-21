@@ -33,4 +33,13 @@ defmodule ExWallet.Mnemonic do
     |> bit_size()
     |> div(32)
   end
+
+  def maybe_normalize(binary) do
+    binary
+    |> String.valid?()
+    |> normalize(binary)
+  end
+
+  defp normalize(true, string), do: Base.decode16!(string, case: :mixed)
+  defp normalize(false, binary), do: binary
 end
