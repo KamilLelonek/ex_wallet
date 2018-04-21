@@ -121,3 +121,7 @@ And, once you have your mnemonic words, you can turn them back into the correspo
 iex(14)> ExWallet.Mnemonic.Advanced.to_entropy(mnemonic)
 <<2, 181, 235, 170, 43, 221, 13, 29, 3, 159, 94, 107, 198, 116, 104, 255>>
 ```
+
+### Mnemonic.Simple
+
+It has identical interface as `Advanced` above, and, as you can guess, provides a simpler implementation for the the same functionality.
