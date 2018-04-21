@@ -22,28 +22,29 @@ defmodule ExWallet.Mnemonic.Advanced do
 
   def from_entropy(binary) do
     binary
-    |> String.valid?()
-    |> normalize(binary)
+    |> Mnemonic.maybe_normalize()
     |> append_checksum()
     |> mnemonic()
   end
 
   def to_entropy(mnemonic) do
     mnemonic
-    |> binary_indicies()
-    |> entropy_bits()
-    |> encode_entropy()
+    |> indicies()
+    |> bytes()
+    |> entropy()
   end
-
-  defp normalize(true, string), do: Base.decode16!(string, case: :mixed)
-  defp normalize(false, binary), do: binary
 
   defp append_checksum(bytes) do
     bytes
+    |> checksum()
+    |> append(bytes)
+  end
+
+  defp checksum(entropy) do
+    entropy
     |> Mnemonic.sha256()
     |> to_binary_string()
-    |> take_first(bytes)
-    |> append_to_binary_string(bytes)
+    |> take_first(entropy)
   end
 
   defp to_binary_string(bytes) do
@@ -77,7 +78,7 @@ defmodule ExWallet.Mnemonic.Advanced do
 
   defp slice(range, binary_string), do: String.slice(binary_string, range)
 
-  defp append_to_binary_string(checksum, bytes), do: to_binary_string(bytes) <> checksum
+  defp append(checksum, bytes), do: to_binary_string(bytes) <> checksum
 
   defp mnemonic(entropy) do
     @regex_chunk_from_entropy
@@ -95,7 +96,7 @@ defmodule ExWallet.Mnemonic.Advanced do
 
   defp pick_word(index), do: Enum.at(Mnemonic.words(), index)
 
-  defp binary_indicies(mnemonic) do
+  defp indicies(mnemonic) do
     mnemonic
     |> String.split()
     |> Enum.map(&word_binary_index/1)
@@ -110,7 +111,7 @@ defmodule ExWallet.Mnemonic.Advanced do
 
   defp binary_of_index(index), do: to_binary(index, @leading_zeros_of_mnemonic)
 
-  defp entropy_bits(bits) do
+  defp bytes(bits) do
     bits
     |> String.length()
     |> div(33)
@@ -119,7 +120,7 @@ defmodule ExWallet.Mnemonic.Advanced do
     |> slice(bits)
   end
 
-  defp encode_entropy(entropy_bits) do
+  defp entropy(entropy_bits) do
     @regex_chunk_to_entropy
     |> Regex.scan(entropy_bits)
     |> List.flatten()
