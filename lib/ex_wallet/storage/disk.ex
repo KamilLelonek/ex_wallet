@@ -27,7 +27,7 @@ defmodule ExWallet.Storage.Disk do
     with {:ok, files} <- File.rm_rf(directory) do
       files
     else
-      {:error, error} -> translate(error)
+      {:error, reason, _file} -> translate(reason)
     end
   end
 
