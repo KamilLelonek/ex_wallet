@@ -15,16 +15,29 @@ defmodule ExWallet.Mnemonic.Simple do
     |> from_entropy()
   end
 
-  def from_entropy(entropy) do
-    entropy
-    |> Mnemonic.sha256()
-    |> checksum(entropy)
-    |> append(entropy)
+  def from_entropy(binary) do
+    binary
+    |> Mnemonic.maybe_normalize()
+    |> append_checksum()
     |> mnemonic()
   end
 
-  defp checksum(sha256, entropy) do
+  def to_entropy(mnemonic) do
+    mnemonic
+    |> indicies()
+    |> bytes()
+    |> entropy()
+  end
+
+  defp append_checksum(bytes) do
+    bytes
+    |> checksum()
+    |> append(bytes)
+  end
+
+  defp checksum(entropy) do
     with size = Mnemonic.checksum_length(entropy),
+         sha256 = Mnemonic.sha256(entropy),
          <<checksum::bits-size(size), _::bits>> <- sha256,
          do: checksum
   end
@@ -32,8 +45,41 @@ defmodule ExWallet.Mnemonic.Simple do
   defp append(checksum, entropy), do: <<entropy::bits, checksum::bits>>
 
   defp mnemonic(entropy) do
+    entropy
+    |> chunks()
+    |> Enum.join(" ")
+  end
+
+  defp chunks(entropy) do
     for <<chunk::11 <- entropy>> do
       Enum.at(Mnemonic.words(), chunk)
     end
+  end
+
+  defp indicies(mnemonic) do
+    mnemonic
+    |> String.split()
+    |> Enum.map(&word_index/1)
+  end
+
+  defp word_index(word), do: Enum.find_index(Mnemonic.words(), &(&1 == word))
+
+  defp bytes(indicies) do
+    indicies
+    |> Enum.map(&<<&1::11>>)
+    |> Enum.into(<<>>)
+  end
+
+  defp entropy(sha256) do
+    with size = entropy_length(sha256),
+         <<entropy::bits-size(size), _::bits>> <- sha256,
+         do: entropy
+  end
+
+  defp entropy_length(hash) do
+    hash
+    |> bit_size()
+    |> Kernel.*(32)
+    |> div(33)
   end
 end
