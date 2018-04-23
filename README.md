@@ -125,3 +125,23 @@ iex(14)> ExWallet.Mnemonic.Advanced.to_entropy(mnemonic)
 ### Mnemonic.Simple
 
 It has identical interface as `Advanced` above, and, as you can guess, provides a simpler implementation for the the same functionality.
+
+### Seed
+
+**`generate/2`**
+
+From the generated mnemonic, you can create a seed which can be later used to derive your keys in HD wallet. To do that, just call:
+
+```elixir
+iex(15)> ExWallet.Seed.generate(mnemonic)
+"9941f6b337ae0e6501c43fcae4631c07505212220120e5837a309c4b6e0f1d8a6941bef743602ee61ae09adf72ba94bd31d3b05c5d1f00fdf7d005fdc86f5575"
+```
+
+You can provide an optional passphrase to your seed:
+
+```elixir
+iex(16)> ExWallet.Seed.generate(mnemonic, "password")
+"78cf455898d8647080e0b6ba92b39c6bea1f115994c5945bca8dc8dffa2d9a428b2aef255cfeaefd381bdd5fb8aef6dae1793a169abeba481cc9ec9ded664514"
+```
+
+Notice that, even with the same mnemonic, the generated seed is different with the given password.
