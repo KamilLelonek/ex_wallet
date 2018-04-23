@@ -7,12 +7,12 @@ defmodule ExWallet.Seed do
   def generate(mnemonic, passphrase \\ "") do
     passphrase
     |> salt()
-    |> start(mnemonic)
+    |> pbkdf2(mnemonic)
   end
 
   defp salt(passphrase), do: "mnemonic" <> passphrase
 
-  defp start(salt, mnemonic) do
+  defp pbkdf2(salt, mnemonic) do
     mnemonic
     |> hash(salt)
     |> encode_iterations(salt, mnemonic)
