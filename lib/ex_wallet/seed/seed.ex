@@ -2,7 +2,6 @@ defmodule ExWallet.Seed do
   @rounds_count 2048
   @initial_round_number 1
   @seed_length div(512, 8)
-  @result []
 
   def generate(mnemonic, passphrase \\ "") do
     passphrase
@@ -13,32 +12,24 @@ defmodule ExWallet.Seed do
   defp salt(passphrase), do: "mnemonic" <> passphrase
 
   defp pbkdf2(salt, mnemonic) do
-    mnemonic
-    |> initial_round(salt)
-    |> encode_rounds(salt, mnemonic)
+    with initial_block = initial_round(mnemonic, salt) do
+      salt
+      |> iterate(mnemonic, @initial_round_number + 1, initial_block, initial_block)
+      |> seed()
+    end
   end
 
   defp initial_round(mnemonic, salt),
     do: hmac_sha512(mnemonic, <<salt::binary, @initial_round_number::integer-size(32)>>)
 
-  defp encode_rounds(initial_block, salt, mnemonic) do
-    salt
-    |> iterate(mnemonic, @initial_round_number + 1, initial_block, initial_block)
+  defp seed(acc) do
+    [acc, [acc, []]]
+    |> Enum.reverse()
+    |> IO.iodata_to_binary()
     |> encode()
   end
 
-  defp encode(acc)
-       when not is_list(acc),
-       do: encoode([acc, [acc, @result]])
-
-  defp encoode(acc) do
-    acc
-    |> Enum.reverse()
-    |> IO.iodata_to_binary()
-    |> seed()
-  end
-
-  defp seed(<<seed::binary-size(@seed_length), _::binary>>), do: Base.encode16(seed, case: :lower)
+  defp encode(<<seed::binary-size(@seed_length), _::binary>>), do: Base.encode16(seed, case: :lower)
 
   defp iterate(_salt, _mnemonic, round_number, _previous_block, acc)
        when round_number > @rounds_count,
