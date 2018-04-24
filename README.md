@@ -6,6 +6,7 @@ The intent of this repository is described in the following articles:
 
 * https://k.lelonek.me/bitcoin-address
 * https://k.lelonek.me/bitcoin-mnemonic-phrase
+* https://k.lelonek.me/bitcoin-wallet-seed
 
 ## Usage
 
