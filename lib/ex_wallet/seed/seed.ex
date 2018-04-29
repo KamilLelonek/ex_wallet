@@ -13,7 +13,7 @@ defmodule ExWallet.Seed do
   defp salt(passphrase), do: "mnemonic" <> passphrase
 
   defp initial_round(salt, mnemonic),
-    do: hmac_sha512(mnemonic, <<salt::binary, @initial_round_number::integer-size(32)>>)
+    do: hmac_sha512(mnemonic, <<salt::binary, @initial_round_number::integer-32>>)
 
   defp pbkdf2(initial_block, mnemonic),
     do: iterate(mnemonic, @initial_round_number + 1, initial_block, initial_block)
