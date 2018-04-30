@@ -15,7 +15,7 @@ defmodule ExWallet.KeyPair do
   defp maybe_decode(false, private_key), do: private_key
 
   defp generate_key(private_key) do
-    with {public_key, ^private_key} <-
+    with {public_key, _private_key} <-
            :crypto.generate_key(@type_algorithm, @ecdsa_curve, private_key),
          do: public_key
   end
