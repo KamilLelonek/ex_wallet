@@ -3,7 +3,7 @@ defmodule ExWallet.Mnemonic.SimpleTest do
 
   alias ExWallet.Mnemonic.Simple
 
-  @vector "test/fixtures/vectors.json"
+  @vector "test/fixtures/bip39.json"
           |> File.read!()
           |> Poison.decode!(keys: :atoms)
           |> Map.get(:english)

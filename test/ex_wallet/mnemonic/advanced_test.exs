@@ -3,7 +3,7 @@ defmodule ExWallet.Mnemonic.AdvancedTest do
 
   alias ExWallet.Mnemonic.Advanced
 
-  @vector "test/fixtures/vectors.json"
+  @vector "test/fixtures/bip39.json"
           |> File.read!()
           |> Poison.decode!(keys: :atoms)
           |> Map.get(:english)
