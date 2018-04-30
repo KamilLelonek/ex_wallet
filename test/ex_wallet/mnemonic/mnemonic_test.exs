@@ -6,10 +6,9 @@ defmodule ExWallet.Mnemonic.MnemonicTest do
   @vector "test/fixtures/bip39.json"
           |> File.read!()
           |> Poison.decode!(keys: :atoms)
-          |> Map.get(:english)
 
   test "should validate vector mnemonics" do
-    assert Enum.all?(@vector, fn [entropy, mnemonic | _] ->
+    assert Enum.all?(@vector, fn %{entropy: entropy, mnemonic: mnemonic} ->
              assert Advanced.from_entropy(entropy) == mnemonic
 
              assert mnemonic

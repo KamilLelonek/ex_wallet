@@ -6,7 +6,6 @@ defmodule ExWallet.Mnemonic.AdvancedTest do
   @vector "test/fixtures/bip39.json"
           |> File.read!()
           |> Poison.decode!(keys: :atoms)
-          |> Map.get(:english)
 
   test "should not generate mnemonic words with invalid entropy length" do
     assert {:error, "Entropy length must be one of [128, 160, 192, 224, 256]"} =
@@ -14,7 +13,7 @@ defmodule ExWallet.Mnemonic.AdvancedTest do
   end
 
   test "should validate vector mnemonics" do
-    assert Enum.all?(@vector, fn [entropy, mnemonic | _] ->
+    assert Enum.all?(@vector, fn %{entropy: entropy, mnemonic: mnemonic} ->
              assert Advanced.from_entropy(entropy) == mnemonic
 
              assert mnemonic
