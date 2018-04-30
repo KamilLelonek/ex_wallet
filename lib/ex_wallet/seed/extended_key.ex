@@ -43,6 +43,17 @@ defmodule ExWallet.Seed.ExtendedKey do
     |> Base58.check_encode()
   end
 
-  defp prepend_serial(version_number, chain_code, key),
-    do: <<version_number::binary, 0::72, chain_code::binary, key::binary>>
+  defp prepend_serial(version_number, chain_code, key) do
+    <<
+      version_number::binary,
+      # depth
+      0::8,
+      # fingerprint
+      0::32,
+      # child number
+      0::32,
+      chain_code::binary,
+      key::binary
+    >>
+  end
 end
