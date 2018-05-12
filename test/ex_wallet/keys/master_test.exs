@@ -1,8 +1,8 @@
-defmodule ExWallet.Seed.Kyes.MasterTest do
+defmodule ExWallet.Keys.MasterTest do
   use ExUnit.Case, async: true
 
   alias ExWallet.Seed
-  alias ExWallet.Seed.Kyes.Master
+  alias ExWallet.Keys.Master
 
   @mnemonic "primary matter gate"
   @seed "32038ca6aa25db9377aaf54ac2de4059419205e4b9021b68a3b83039a5742b1f0d55cd39c3b8369373507963209c9676ac230d4724cb343b26a3cba4d6c84cae"

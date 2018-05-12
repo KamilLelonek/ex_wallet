@@ -1,8 +1,7 @@
-defmodule ExWallet.Seed.Keys.ExtendedTest do
+defmodule ExWallet.Keys.ExtendedTest do
   use ExUnit.Case, async: true
 
-  alias ExWallet.Seed.{Kyes.Master, Keys.Extended}
-  alias ExWallet.Keys.Pair
+  alias ExWallet.Keys.{Pair, Master, Extended}
 
   @vector_bip32 "test/fixtures/bip32.json"
                 |> File.read!()
