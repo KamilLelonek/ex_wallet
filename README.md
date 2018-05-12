@@ -134,7 +134,7 @@ It has identical interface as `Advanced` above, and, as you can guess, provides 
 From the generated mnemonic, you can create a seed which can be later used to derive your keys in HD wallet. To do that, just call:
 
 ```elixir
-iex(15)> ExWallet.Seed.generate(mnemonic)
+iex(15)> seed = ExWallet.Seed.generate(mnemonic)
 "9941f6b337ae0e6501c43fcae4631c07505212220120e5837a309c4b6e0f1d8a6941bef743602ee61ae09adf72ba94bd31d3b05c5d1f00fdf7d005fdc86f5575"
 ```
 
@@ -146,3 +146,21 @@ iex(16)> ExWallet.Seed.generate(mnemonic, "password")
 ```
 
 Notice that, even with the same mnemonic, the generated seed is different with the given password.
+
+### Keys.Master
+
+**`create/1`**
+
+Creates a master private key and a chain code from the given seed.
+
+```elixir
+iex(17)> master = ExWallet.Keys.Master.create(seed)
+%ExWallet.Keys.Master{
+  chain_code: <<131, 69, 235, 8, 98, 10, 186, 165, 132, 3, 72, 226, 215, 255,
+    246, 149, 151, 252, 74, 61, 83, 136, 39, 206, 51, 173, 236, 87, 231, 172,
+    120, 6>>,
+  private_key: <<235, 156, 223, 236, 122, 159, 219, 74, 168, 63, 172, 58, 68,
+    101, 64, 28, 150, 138, 86, 234, 43, 221, 144, 104, 203, 253, 54, 176, 112,
+    214, 38, 163>>
+}
+```
