@@ -1,4 +1,4 @@
-defmodule ExWallet.KeyPair do
+defmodule ExWallet.Keys.Pair do
   @type_algorithm :ecdh
   @ecdsa_curve :secp256k1
 

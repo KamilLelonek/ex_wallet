@@ -1,6 +1,6 @@
 defmodule ExWallet.Address do
   alias ExWallet.Base58
-  alias ExWallet.KeyPair
+  alias ExWallet.Keys.Pair
 
   @version_bytes %{
     main: <<0x00>>,
@@ -9,7 +9,7 @@ defmodule ExWallet.Address do
 
   def calculate(private_key, network \\ :main) do
     private_key
-    |> KeyPair.to_public_key()
+    |> Pair.to_public_key()
     |> hash_160()
     |> prepend_version_byte(network)
     |> Base58.check_encode()

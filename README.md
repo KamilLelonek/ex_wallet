@@ -12,14 +12,14 @@ The intent of this repository is described in the following articles:
 
 There are a couple of modules you can use.
 
-### KeyPair
+### Keys.Pair
 
 **`generate/0`**
 
 This is the very first function you should use to generate _private_ and _public_ keys.
 
 ```elixir
-iex(1)> {public_key, private_key} = ExWallet.KeyPair.generate()
+iex(1)> {public_key, private_key} = ExWallet.Keys.Pair.generate()
 {<<4, 151, 165, 182, 104, 33, 82, 87, 33, 86, 124, 244, 253, 92, 60, 183, 7,
    154, 180, 180, 47, 244, 111, 19, 40, 17, 182, 113, 123, 223, 121, 66, 61,
    163, 59, 23, 46, 179, 183, 212, 84, 206, 146, 133, 78, 224, 18, 82, 2, ...>>,
@@ -32,7 +32,7 @@ iex(1)> {public_key, private_key} = ExWallet.KeyPair.generate()
 You can use the following function if you have a _private key_ and you want to derive a _public_ one.
 
 ```elixir
-iex(2)> ExWallet.KeyPair.to_public_key(private_key)
+iex(2)> ExWallet.Keys.Pair.to_public_key(private_key)
 <<4, 151, 165, 182, 104, 33, 82, 87, 33, 86, 124, 244, 253, 92, 60, 183, 7, 154,
   180, 180, 47, 244, 111, 19, 40, 17, 182, 113, 123, 223, 121, 66, 61, 163, 59,
   23, 46, 179, 183, 212, 84, 206, 146, 133, 78, 224, 18, 82, 2, 70, ...>>
