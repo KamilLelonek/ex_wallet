@@ -154,7 +154,7 @@ Notice that, even with the same mnemonic, the generated seed is different with t
 Creates a master private key and a chain code from the given seed.
 
 ```elixir
-iex(17)> master = ExWallet.Keys.Master.create(seed)
+iex(17)> %{chain_code: chain_code, private_key: private_key} = ExWallet.Keys.Master.create(seed)
 %ExWallet.Keys.Master{
   chain_code: <<131, 69, 235, 8, 98, 10, 186, 165, 132, 3, 72, 226, 215, 255,
     246, 149, 151, 252, 74, 61, 83, 136, 39, 206, 51, 173, 236, 87, 231, 172,
@@ -163,4 +163,24 @@ iex(17)> master = ExWallet.Keys.Master.create(seed)
     101, 64, 28, 150, 138, 86, 234, 43, 221, 144, 104, 203, 253, 54, 176, 112,
     214, 38, 163>>
 }
+```
+
+### Keys.Extended
+
+**`public/3`**
+
+**`private/3`**
+```elixir
+iex(18)> ExWallet.Keys.Extended.private(private_key, chain_code, :main)
+"xprv9s21ZrQH143K3NAHGAnTnNnTgQC3Q2A9H45DxCqSBuvvpNtGqLcrwLQjd4omvTpD5pxjjuuuZJ9gHAVYf3gzq7TZEBRtrFpKwQq8PS6BUMh"
+```
+
+```elixir
+iex(19)> public_key = ExWallet.Keys.Pair.to_public_key(private_key)
+<<4, 170, 46, 81, 121, 215, 188, 41, 99, 37, 107, 147, 0, 225, 12, 220, 193, 96,
+  169, 223, 53, 191, 156, 45, 110, 101, 147, 179, 134, 1, 75, 169, 79, 238, 199,
+  52, 14, 93, 94, 150, 83, 19, 111, 11, 197, 87, 161, 113, 65, 13, ...>>
+
+iex(20)> ExWallet.Keys.Extended.public(public_key, chain_code, :test)
+"tpubD6NzVbkrYhZ4XeRbpPJZMS4ZZZ8BnsP4Bub879JC6ADoSTt8T6nCdaQ3iMRWXCFduPMwoNo9hA6SR3jK96b23gSeebSaHX9tixVVWFNoQnT"
 ```
