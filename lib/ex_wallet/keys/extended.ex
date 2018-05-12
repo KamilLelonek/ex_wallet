@@ -1,4 +1,4 @@
-defmodule ExWallet.Seed.ExtendedKey do
+defmodule ExWallet.Seed.Keys.Extended do
   alias ExWallet.Base58
 
   @version_numbers %{

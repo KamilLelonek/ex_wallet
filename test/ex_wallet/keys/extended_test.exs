@@ -1,7 +1,7 @@
-defmodule ExWallet.Seed.ExtendedKeyTest do
+defmodule ExWallet.Seed.Keys.ExtendedTest do
   use ExUnit.Case, async: true
 
-  alias ExWallet.Seed.{MasterKey, ExtendedKey}
+  alias ExWallet.Seed.{Kyes.Master, Keys.Extended}
   alias ExWallet.Keys.Pair
 
   @vector_bip32 "test/fixtures/bip32.json"
@@ -18,12 +18,12 @@ defmodule ExWallet.Seed.ExtendedKeyTest do
                %{
                  chain_code: chain_code,
                  private_key: private_key
-               } = MasterKey.create(seed)
+               } = Master.create(seed)
 
                public_key = Pair.to_public_key(private_key)
 
-               assert ^pub = ExtendedKey.public(public_key, chain_code, :main)
-               assert ^priv = ExtendedKey.private(private_key, chain_code, :main)
+               assert ^pub = Extended.public(public_key, chain_code, :main)
+               assert ^priv = Extended.private(private_key, chain_code, :main)
              end)
            end)
   end
@@ -33,9 +33,9 @@ defmodule ExWallet.Seed.ExtendedKeyTest do
              %{
                chain_code: chain_code,
                private_key: private_key
-             } = MasterKey.create(seed)
+             } = Master.create(seed)
 
-             assert ^priv = ExtendedKey.private(private_key, chain_code, :main)
+             assert ^priv = Extended.private(private_key, chain_code, :main)
            end)
   end
 end

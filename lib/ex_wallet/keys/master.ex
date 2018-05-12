@@ -1,4 +1,4 @@
-defmodule ExWallet.Seed.MasterKey do
+defmodule ExWallet.Seed.Kyes.Master do
   defstruct [:private_key, :chain_code]
 
   @bitcoin_key "Bitcoin seed"
