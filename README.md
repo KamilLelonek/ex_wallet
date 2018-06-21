@@ -167,13 +167,14 @@ iex(17)> %{chain_code: chain_code, private_key: private_key} = ExWallet.Keys.Mas
 
 ### Keys.Extended
 
-**`public/3`**
-
 **`private/3`**
+
 ```elixir
 iex(18)> ExWallet.Keys.Extended.private(private_key, chain_code, :main)
 "xprv9s21ZrQH143K3NAHGAnTnNnTgQC3Q2A9H45DxCqSBuvvpNtGqLcrwLQjd4omvTpD5pxjjuuuZJ9gHAVYf3gzq7TZEBRtrFpKwQq8PS6BUMh"
 ```
+
+**`public/3`**
 
 ```elixir
 iex(19)> public_key = ExWallet.Keys.Pair.to_public_key(private_key)
