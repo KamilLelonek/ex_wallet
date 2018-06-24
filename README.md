@@ -8,6 +8,18 @@ The intent of this repository is described in the following articles:
 * https://k.lelonek.me/bitcoin-mnemonic-phrase
 * https://k.lelonek.me/bitcoin-wallet-seed
 
+## Prerequisites
+
+Firstly, make sure you have `libtool` (not the native one), `automake` and `autogen` installed.
+
+To do that, use [`brew`](https://brew.sh/):
+
+    brew install libtool automake autogen
+
+Then, install and compile all the dependencies and the entire project:
+
+    mix do deps.get, deps.compile, compile
+
 ## Usage
 
 There are a couple of modules you can use.
