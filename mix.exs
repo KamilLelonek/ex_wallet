@@ -21,7 +21,8 @@ defmodule ExWallet.MixProject do
 
   defp deps do
     [
-      {:poison, "~> 3.1"}
+      {:poison, "~> 3.1"},
+      {:libsecp256k1, github: "mbrix/libsecp256k1", manager: :rebar}
     ]
   end
 
