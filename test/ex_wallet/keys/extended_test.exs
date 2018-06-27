@@ -16,13 +16,13 @@ defmodule ExWallet.Keys.ExtendedTest do
              Enum.all?(chains, fn %{pub: pub, priv: priv} ->
                %{
                  chain_code: chain_code,
-                 private_key: private_key
+                 key: key
                } = Master.create(seed)
 
-               public_key = Pair.to_public_key(private_key)
+               public_key = Pair.to_public_key(key)
 
                assert ^pub = Extended.public(public_key, chain_code, :main)
-               assert ^priv = Extended.private(private_key, chain_code, :main)
+               assert ^priv = Extended.private(key, chain_code, :main)
              end)
            end)
   end
@@ -31,10 +31,10 @@ defmodule ExWallet.Keys.ExtendedTest do
     assert Enum.all?(@vector_bip39, fn %{seed: seed, private_key_extended: priv} ->
              %{
                chain_code: chain_code,
-               private_key: private_key
+               key: key
              } = Master.create(seed)
 
-             assert ^priv = Extended.private(private_key, chain_code, :main)
+             assert ^priv = Extended.private(key, chain_code, :main)
            end)
   end
 end
