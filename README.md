@@ -166,14 +166,19 @@ Notice that, even with the same mnemonic, the generated seed is different with t
 Creates a master private key and a chain code from the given seed.
 
 ```elixir
-iex(17)> %{chain_code: chain_code, private_key: private_key} = ExWallet.Keys.Master.create(seed)
-%ExWallet.Keys.Master{
-  chain_code: <<131, 69, 235, 8, 98, 10, 186, 165, 132, 3, 72, 226, 215, 255,
-    246, 149, 151, 252, 74, 61, 83, 136, 39, 206, 51, 173, 236, 87, 231, 172,
-    120, 6>>,
-  private_key: <<235, 156, 223, 236, 122, 159, 219, 74, 168, 63, 172, 58, 68,
-    101, 64, 28, 150, 138, 86, 234, 43, 221, 144, 104, 203, 253, 54, 176, 112,
-    214, 38, 163>>
+iex(17)> %{chain_code: chain_code, key: key} = ExWallet.Keys.Master.create(seed)
+%ExWallet.Keys.Private{
+  chain_code: <<211, 95, 0, 172, 81, 118, 33, 225, 4, 161, 30, 58, 63, 94, 148,
+    207, 233, 247, 216, 42, 155, 95, 136, 65, 219, 158, 48, 71, 187, 75, 232,
+    121>>,
+  child_number: 0,
+  depth: 0,
+  fingerprint: <<0, 0, 0, 0>>,
+  key: <<113, 135, 206, 171, 176, 125, 48, 119, 134, 96, 129, 16, 126, 146, 98,
+    237, 172, 203, 221, 191, 23, 95, 121, 216, 88, 45, 252, 56, 220, 233, 143,
+    120>>,
+  network: :main,
+  version_number: <<4, 136, 173, 228>>
 }
 ```
 
@@ -181,19 +186,67 @@ iex(17)> %{chain_code: chain_code, private_key: private_key} = ExWallet.Keys.Mas
 
 **`private/3`**
 
+Serializes the given private key with its chain code in the `Base58` representation.
+
 ```elixir
-iex(18)> ExWallet.Keys.Extended.private(private_key, chain_code, :main)
+iex(18)> ExWallet.Keys.Extended.private(key, chain_code, :main)
 "xprv9s21ZrQH143K3NAHGAnTnNnTgQC3Q2A9H45DxCqSBuvvpNtGqLcrwLQjd4omvTpD5pxjjuuuZJ9gHAVYf3gzq7TZEBRtrFpKwQq8PS6BUMh"
 ```
 
 **`public/3`**
 
+Serializes the given public key with its chain code in the `Base58` representation.
+
 ```elixir
-iex(19)> public_key = ExWallet.Keys.Pair.to_public_key(private_key)
+iex(19)> public_key = ExWallet.Keys.Pair.to_public_key(key)
 <<4, 170, 46, 81, 121, 215, 188, 41, 99, 37, 107, 147, 0, 225, 12, 220, 193, 96,
   169, 223, 53, 191, 156, 45, 110, 101, 147, 179, 134, 1, 75, 169, 79, 238, 199,
   52, 14, 93, 94, 150, 83, 19, 111, 11, 197, 87, 161, 113, 65, 13, ...>>
 
 iex(20)> ExWallet.Keys.Extended.public(public_key, chain_code, :test)
 "tpubD6NzVbkrYhZ4XeRbpPJZMS4ZZZ8BnsP4Bub879JC6ADoSTt8T6nCdaQ3iMRWXCFduPMwoNo9hA6SR3jK96b23gSeebSaHX9tixVVWFNoQnT"
+```
+
+### Keys.Public
+
+**`new/6`**
+
+Creates a new public extended key struct with the given params.
+
+```elixir
+iex(21)> ExWallet.Keys.Public.new(:main, key, chain_code)
+%ExWallet.Keys.Public{
+  chain_code: <<230, 125, 124, 99, 28, 250, 75, 124, 12, 51, 140, 0, 243, 64,
+    111, 227, 169, 73, 152, 111, 175, 136, 252, 11, 126, 58, 46, 143, 146, 72,
+    238, 242>>,
+  child_number: 0,
+  depth: 0,
+  fingerprint: <<0, 0, 0, 0>>,
+  key: <<133, 188, 193, 183, 218, 206, 89, 125, 148, 36, 247, 59, 231, 52, 107,
+    71, 134, 107, 46, 72, 225, 30, 196, 236, 87, 27, 236, 28, 233, 13, 8, 162>>,
+  network: :main,
+  version_number: <<4, 136, 178, 30>>
+}
+```
+
+### Keys.Private
+
+**`new/6`**
+
+Creates a new private extended key struct with the given params.
+
+```elixir
+iex(22)> ExWallet.Keys.Private.new(:test, key, chain_code)
+%ExWallet.Keys.Private{
+  chain_code: <<230, 125, 124, 99, 28, 250, 75, 124, 12, 51, 140, 0, 243, 64,
+    111, 227, 169, 73, 152, 111, 175, 136, 252, 11, 126, 58, 46, 143, 146, 72,
+    238, 242>>,
+  child_number: 0,
+  depth: 0,
+  fingerprint: <<0, 0, 0, 0>>,
+  key: <<133, 188, 193, 183, 218, 206, 89, 125, 148, 36, 247, 59, 231, 52, 107,
+    71, 134, 107, 46, 72, 225, 30, 196, 236, 87, 27, 236, 28, 233, 13, 8, 162>>,
+  network: :test,
+  version_number: <<4, 53, 131, 148>>
+}
 ```
