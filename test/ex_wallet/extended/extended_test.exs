@@ -2,6 +2,7 @@ defmodule ExWallet.Keys.ExtendedTest do
   use ExUnit.Case, async: true
 
   alias ExWallet.{Seed, KeyPair, Extended}
+  alias ExWallet.Extended.{Private, Public}
 
   @vector_bip32 "test/fixtures/bip32.json"
                 |> File.read!()
@@ -53,5 +54,34 @@ defmodule ExWallet.Keys.ExtendedTest do
 
              assert ^priv = Extended.private(key, chain_code, :main)
            end)
+  end
+
+  describe "to_public_key" do
+    test "should convert the master PrivateKey to PublicKey" do
+      assert master_private_key =
+               %Private{
+                 chain_code: chain_code,
+                 child_number: child_number,
+                 depth: depth,
+                 fingerprint: fingerprint,
+                 key: private_key,
+                 network: network,
+                 version_number: version_number_private
+               } = @mnemonic |> Seed.generate() |> Extended.master()
+
+      assert %Public{
+               chain_code: ^chain_code,
+               child_number: ^child_number,
+               depth: ^depth,
+               fingerprint: ^fingerprint,
+               key: public_key,
+               network: ^network,
+               version_number: version_number_public
+             } = Extended.to_public_key(master_private_key)
+
+      refute version_number_private == version_number_public
+
+      assert public_key == KeyPair.to_public_key(private_key)
+    end
   end
 end

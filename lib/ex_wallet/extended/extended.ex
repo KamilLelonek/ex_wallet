@@ -1,6 +1,6 @@
 defmodule ExWallet.Extended do
-  alias ExWallet.Base58
-  alias ExWallet.Extended.Private
+  alias ExWallet.{Base58, KeyPair}
+  alias ExWallet.Extended.{Private, Public}
 
   @bitcoin_key "Bitcoin seed"
   @version_numbers %{
@@ -21,11 +21,6 @@ defmodule ExWallet.Extended do
     |> new_private(network)
   end
 
-  defp hmac_sha512(seed), do: :crypto.hmac(:sha512, @bitcoin_key, seed)
-
-  defp new_private(<<private_key::binary-32, chain_code::binary-32>>, network),
-    do: Private.new(network, private_key, chain_code)
-
   def public(public_key, chain_code, network) do
     public_key
     |> compress()
@@ -37,6 +32,29 @@ defmodule ExWallet.Extended do
     |> prepend_index()
     |> serialize(chain_code, :private, network)
   end
+
+  def to_public_key(%Private{
+        network: network,
+        key: key,
+        chain_code: chain_code,
+        depth: depth,
+        fingerprint: fingerprint,
+        child_number: child_number
+      }) do
+    Public.new(
+      network,
+      KeyPair.to_public_key(key),
+      chain_code,
+      depth,
+      fingerprint,
+      child_number
+    )
+  end
+
+  defp hmac_sha512(seed), do: :crypto.hmac(:sha512, @bitcoin_key, seed)
+
+  defp new_private(<<private_key::binary-32, chain_code::binary-32>>, network),
+    do: Private.new(network, private_key, chain_code)
 
   defp compress(<<_prefix::8, x_coordinate::256, y_coordinate::256>>) do
     y_coordinate
