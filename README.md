@@ -166,7 +166,7 @@ Notice that, even with the same mnemonic, the generated seed is different with t
 Creates a master private key and a chain code from the given seed.
 
 ```elixir
-iex(17)> master_key = %{chain_code: chain_code, key: key} = ExWallet.Extended.master(seed)
+iex(17)> master_key = ExWallet.Extended.master(seed)
 %ExWallet.Extended.Private{
   chain_code: <<211, 95, 0, 172, 81, 118, 33, 225, 4, 161, 30, 58, 63, 94, 148,
     207, 233, 247, 216, 42, 155, 95, 136, 65, 219, 158, 48, 71, 187, 75, 232,
@@ -182,27 +182,31 @@ iex(17)> master_key = %{chain_code: chain_code, key: key} = ExWallet.Extended.ma
 }
 ```
 
-**`private/3`**
+**`serialize/3`**
 
-Serializes the given private key with its chain code in the `Base58` representation.
+Serializes the given key into the `Base58` representation.
 
 ```elixir
-iex(18)> ExWallet.Extended.private(key, chain_code, :main)
+iex(18)> ExWallet.Extended.serialize(master_key)
 "xprv9s21ZrQH143K3NAHGAnTnNnTgQC3Q2A9H45DxCqSBuvvpNtGqLcrwLQjd4omvTpD5pxjjuuuZJ9gHAVYf3gzq7TZEBRtrFpKwQq8PS6BUMh"
-```
 
-**`public/3`**
+iex(19)> public_key = ExWallet.Extended.to_public_key(master_key)
+%ExWallet.Extended.Public{
+  chain_code: <<188, 182, 132, 50, 118, 131, 197, 34, 46, 13, 92, 95, 242, 248,
+    215, 104, 225, 149, 48, 203, 148, 210, 52, 226, 208, 13, 198, 75, 143, 9,
+    29, 143>>,
+  child_number: 0,
+  depth: 0,
+  fingerprint: <<0, 0, 0, 0>>,
+  key: <<4, 247, 150, 148, 155, 170, 119, 220, 101, 153, 86, 20, 227, 168, 248,
+    43, 64, 59, 11, 94, 219, 157, 20, 157, 101, 31, 50, 79, 111, 94, 173, 51,
+    33, 89, 98, 132, 154, 25, 144, 94, 26, 241, 42, 204, 179, ...>>,
+  network: :main,
+  version_number: <<4, 136, 178, 30>>
+}
 
-Serializes the given public key with its chain code in the `Base58` representation.
-
-```elixir
-iex(19)> public_key = ExWallet.KeyPair.to_public_key(key)
-<<4, 170, 46, 81, 121, 215, 188, 41, 99, 37, 107, 147, 0, 225, 12, 220, 193, 96,
-  169, 223, 53, 191, 156, 45, 110, 101, 147, 179, 134, 1, 75, 169, 79, 238, 199,
-  52, 14, 93, 94, 150, 83, 19, 111, 11, 197, 87, 161, 113, 65, 13, ...>>
-
-iex(20)> ExWallet.Extended.public(public_key, chain_code, :test)
-"tpubD6NzVbkrYhZ4XeRbpPJZMS4ZZZ8BnsP4Bub879JC6ADoSTt8T6nCdaQ3iMRWXCFduPMwoNo9hA6SR3jK96b23gSeebSaHX9tixVVWFNoQnT"
+iex(20)> ExWallet.Extended.serialize(public_key)
+"xpub661MyMwAqRbcGRQXcXXrXAEVzprK3Qfa7FSeufon5EQn9D7T6z5puQUbiWrt6DfpUCghfoeMWSzCi9kKK3KRowuyFkPULbkTXHo7DK2MkYY"
 ```
 
 **`to_public_key/1`**
