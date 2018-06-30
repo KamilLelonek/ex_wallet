@@ -3,19 +3,6 @@ defmodule ExWallet.Extended do
   alias ExWallet.Extended.Private
 
   @bitcoin_key "Bitcoin seed"
-
-  def master(seed, network \\ :main) do
-    seed
-    |> Base.decode16!(case: :lower)
-    |> hmac_sha512()
-    |> build(network)
-  end
-
-  defp hmac_sha512(seed), do: :crypto.hmac(:sha512, @bitcoin_key, seed)
-
-  defp build(<<private_key::binary-32, chain_code::binary-32>>, network),
-    do: Private.new(network, private_key, chain_code)
-
   @version_numbers %{
     private: %{
       main: <<4, 136, 173, 228>>,
@@ -26,6 +13,18 @@ defmodule ExWallet.Extended do
       test: <<4, 53, 135, 207>>
     }
   }
+
+  def master(seed, network \\ :main) do
+    seed
+    |> Base.decode16!(case: :lower)
+    |> hmac_sha512()
+    |> new_private(network)
+  end
+
+  defp hmac_sha512(seed), do: :crypto.hmac(:sha512, @bitcoin_key, seed)
+
+  defp new_private(<<private_key::binary-32, chain_code::binary-32>>, network),
+    do: Private.new(network, private_key, chain_code)
 
   def public(public_key, chain_code, network) do
     public_key
