@@ -3,16 +3,6 @@ defmodule ExWallet.Extended do
   alias ExWallet.Extended.{Private, Public}
 
   @bitcoin_key "Bitcoin seed"
-  @version_numbers %{
-    private: %{
-      main: <<4, 136, 173, 228>>,
-      test: <<4, 53, 131, 148>>
-    },
-    public: %{
-      main: <<4, 136, 178, 30>>,
-      test: <<4, 53, 135, 207>>
-    }
-  }
 
   def master(seed, network \\ :main) do
     seed
@@ -21,16 +11,16 @@ defmodule ExWallet.Extended do
     |> new_private(network)
   end
 
-  def public(public_key, chain_code, network) do
-    public_key
-    |> compress()
-    |> serialize(chain_code, :public, network)
+  def serialize(%Private{key: key} = private_key) do
+    key
+    |> prepend_index()
+    |> encode_serialize(private_key)
   end
 
-  def private(private_key, chain_code, network) do
-    private_key
-    |> prepend_index()
-    |> serialize(chain_code, :private, network)
+  def serialize(%Public{key: key} = public_key) do
+    key
+    |> compress()
+    |> encode_serialize(public_key)
   end
 
   def to_public_key(%Private{
@@ -67,25 +57,29 @@ defmodule ExWallet.Extended do
 
   defp prepend_index(private_key), do: <<0::8, private_key::binary>>
 
-  defp serialize(key, chain_code, type, network) do
-    @version_numbers
-    |> Map.get(type)
-    |> Map.get(network)
-    |> prepend_serial(chain_code, key)
+  defp encode_serialize(transformed_key, key) do
+    transformed_key
+    |> prepend_serial(key)
     |> Base58.check_encode()
   end
 
-  defp prepend_serial(version_number, chain_code, key) do
+  defp prepend_serial(
+         transformed_key,
+         %{
+           version_number: version_number,
+           depth: depth,
+           fingerprint: fingerprint,
+           child_number: child_number,
+           chain_code: chain_code
+         }
+       ) do
     <<
       version_number::binary,
-      # depth
-      0::8,
-      # fingerprint
-      0::32,
-      # child number
-      0::32,
+      depth::8,
+      fingerprint::binary,
+      child_number::32,
       chain_code::binary,
-      key::binary
+      transformed_key::binary
     >>
   end
 end
