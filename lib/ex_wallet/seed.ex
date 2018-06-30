@@ -1,4 +1,6 @@
 defmodule ExWallet.Seed do
+  alias ExWallet.Crypto
+
   @rounds_count 2048
   @initial_round_number 1
 
@@ -13,7 +15,7 @@ defmodule ExWallet.Seed do
   defp salt(passphrase), do: "mnemonic" <> passphrase
 
   defp initial_round(salt, mnemonic),
-    do: hmac_sha512(mnemonic, <<salt::binary, @initial_round_number::integer-32>>)
+    do: Crypto.hmac_sha512(mnemonic, <<salt::binary, @initial_round_number::integer-32>>)
 
   defp pbkdf2(initial_block, mnemonic),
     do: iterate(mnemonic, @initial_round_number + 1, initial_block, initial_block)
@@ -23,11 +25,9 @@ defmodule ExWallet.Seed do
        do: result
 
   defp iterate(mnemonic, round_number, previous_block, result) do
-    with next_block = hmac_sha512(mnemonic, previous_block),
+    with next_block = Crypto.hmac_sha512(mnemonic, previous_block),
       do: iterate(mnemonic, round_number + 1, next_block, xor(next_block, result))
   end
-
-  defp hmac_sha512(key, data), do: :crypto.hmac(:sha512, key, data)
 
   defp xor(a, b), do: :crypto.exor(a, b)
 

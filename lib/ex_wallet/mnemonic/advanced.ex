@@ -1,5 +1,5 @@
 defmodule ExWallet.Mnemonic.Advanced do
-  alias ExWallet.Mnemonic
+  alias ExWallet.{Mnemonic, Crypto}
 
   @allowed_lengths Mnemonic.allowed_lengths()
 
@@ -42,7 +42,7 @@ defmodule ExWallet.Mnemonic.Advanced do
 
   defp checksum(entropy) do
     entropy
-    |> Mnemonic.sha256()
+    |> Crypto.sha256()
     |> to_binary_string()
     |> take_first(entropy)
   end

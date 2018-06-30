@@ -1,7 +1,7 @@
 defmodule ExWallet.Keys.ExtendedTest do
   use ExUnit.Case, async: true
 
-  alias ExWallet.{Seed, KeyPair, Extended}
+  alias ExWallet.{Seed, KeyPair, Extended, Crypto}
   alias ExWallet.Extended.{Private, Public}
 
   @mnemonic "primary matter gate"
@@ -14,14 +14,14 @@ defmodule ExWallet.Keys.ExtendedTest do
                @mnemonic |> Seed.generate() |> Extended.master()
 
       <<^key::binary-32, ^chain_code::binary-32>> =
-        :crypto.hmac(:sha512, "Bitcoin seed", Base.decode16!(@seed, case: :lower))
+        Crypto.hmac_sha512(Base.decode16!(@seed, case: :lower))
     end
 
     test "should extract a private key and a chain code from seed" do
       assert %{key: key, chain_code: chain_code} = Extended.master(@seed)
 
       <<^key::binary-32, ^chain_code::binary-32>> =
-        :crypto.hmac(:sha512, "Bitcoin seed", Base.decode16!(@seed, case: :lower))
+        Crypto.hmac_sha512(Base.decode16!(@seed, case: :lower))
     end
   end
 

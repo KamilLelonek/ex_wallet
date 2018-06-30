@@ -1,5 +1,5 @@
 defmodule ExWallet.Mnemonic.Simple do
-  alias ExWallet.Mnemonic
+  alias ExWallet.{Mnemonic, Crypto}
 
   @allowed_lengths Mnemonic.allowed_lengths()
 
@@ -37,7 +37,7 @@ defmodule ExWallet.Mnemonic.Simple do
 
   defp checksum(entropy) do
     with size = Mnemonic.checksum_length(entropy),
-         sha256 = Mnemonic.sha256(entropy),
+         sha256 = Crypto.sha256(entropy),
          <<checksum::bits-size(size), _::bits>> <- sha256,
          do: checksum
   end

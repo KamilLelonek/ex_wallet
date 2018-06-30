@@ -26,8 +26,6 @@ defmodule ExWallet.Mnemonic do
 
   def bits_to_bytes(bits), do: div(bits, 8)
 
-  def sha256(data), do: :crypto.hash(:sha256, data)
-
   def checksum_length(entropy_bytes) do
     entropy_bytes
     |> bit_size()

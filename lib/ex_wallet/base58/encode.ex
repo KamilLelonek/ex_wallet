@@ -22,13 +22,13 @@ defmodule ExWallet.Base58.Encode do
   defp extended_hash(input, acc) do
     @alphabet
     |> String.at(rem(input, @length))
-    |> append(acc)
+    |> Kernel.<>(acc)
   end
 
   defp prepend_zeros(acc, input) do
     input
     |> encode_zeros()
-    |> append(acc)
+    |> Kernel.<>(acc)
   end
 
   defp encode_zeros(input) do
@@ -48,6 +48,4 @@ defmodule ExWallet.Base58.Encode do
     |> String.first()
     |> String.duplicate(count)
   end
-
-  defp append(prefix, postfix), do: prefix <> postfix
 end
