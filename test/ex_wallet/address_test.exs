@@ -1,10 +1,10 @@
 defmodule ExWallet.AddressTest do
   use ExUnit.Case, async: true
 
-  alias ExWallet.{Keys.Pair, Address}
+  alias ExWallet.{KeyPair, Address}
 
   test "should generate a valid Bitcoin Address" do
-    {_key_public, key_private} = Pair.generate()
+    {_key_public, key_private} = KeyPair.generate()
 
     address = Address.calculate(key_private)
 

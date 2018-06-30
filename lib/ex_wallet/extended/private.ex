@@ -1,4 +1,4 @@
-defmodule ExWallet.Keys.Private do
+defmodule ExWallet.Extended.Private do
   defstruct network: :main,
             version_number: nil,
             key: nil,

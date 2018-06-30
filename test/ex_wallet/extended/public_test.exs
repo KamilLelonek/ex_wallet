@@ -1,7 +1,7 @@
-defmodule ExWallet.Keys.PrivateTest do
+defmodule ExWallet.Extended.PublicTest do
   use ExUnit.Case, async: true
 
-  alias ExWallet.Keys.Private
+  alias ExWallet.Extended.Public
 
   @chain_code <<0>>
   @child_number 0
@@ -12,7 +12,7 @@ defmodule ExWallet.Keys.PrivateTest do
 
   describe "new" do
     test "should have the default values" do
-      assert %Private{
+      assert %Public{
                chain_code: @chain_code,
                child_number: @child_number,
                depth: @depth,
@@ -20,48 +20,48 @@ defmodule ExWallet.Keys.PrivateTest do
                key: nil,
                network: :main,
                version_number: nil
-             } = %Private{}
+             } = %Public{}
     end
 
     test "should provide the default values for the main network" do
       network = :main
 
-      assert %Private{
+      assert %Public{
                chain_code: @chain_code,
                child_number: @child_number,
                depth: @depth,
                fingerprint: @fingerprint,
                key: @key,
                network: ^network,
-               version_number: <<4, 136, 173, 228>>
-             } = Private.new(network, @key)
+               version_number: <<4, 136, 178, 30>>
+             } = Public.new(network, @key)
     end
 
     test "should provide the default values for the test network" do
       network = :test
 
-      assert %Private{
+      assert %Public{
                chain_code: @chain_code,
                child_number: @child_number,
                depth: @depth,
                fingerprint: @fingerprint,
                key: @key,
                network: ^network,
-               version_number: <<4, 53, 131, 148>>
-             } = Private.new(network, @key)
+               version_number: <<4, 53, 135, 207>>
+             } = Public.new(network, @key)
     end
 
     test "should fill the given values" do
-      assert %Private{
+      assert %Public{
                chain_code: @chain_code,
                child_number: @child_number,
                depth: @depth,
                fingerprint: @fingerprint,
                key: @key,
                network: @network,
-               version_number: <<4, 136, 173, 228>>
+               version_number: <<4, 136, 178, 30>>
              } =
-               Private.new(
+               Public.new(
                  @network,
                  @key,
                  @chain_code,
@@ -72,7 +72,7 @@ defmodule ExWallet.Keys.PrivateTest do
     end
 
     test "should fill the given values with an invalid network" do
-      assert %Private{
+      assert %Public{
                chain_code: @chain_code,
                child_number: @child_number,
                depth: @depth,
@@ -80,7 +80,7 @@ defmodule ExWallet.Keys.PrivateTest do
                key: @key,
                network: :x,
                version_number: nil
-             } = Private.new(:x, @key)
+             } = Public.new(:x, @key)
     end
   end
 end

@@ -1,4 +1,4 @@
-defmodule ExWallet.Keys.Public do
+defmodule ExWallet.Extended.Public do
   defstruct network: :main,
             version_number: nil,
             key: nil,

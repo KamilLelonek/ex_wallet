@@ -24,14 +24,14 @@ Then, install and compile all the dependencies and the entire project:
 
 There are a couple of modules you can use.
 
-### Keys.Pair
+### KeyPair
 
 **`generate/0`**
 
 This is the very first function you should use to generate _private_ and _public_ keys.
 
 ```elixir
-iex(1)> {public_key, private_key} = ExWallet.Keys.Pair.generate()
+iex(1)> {public_key, private_key} = ExWallet.KeyPair.generate()
 {<<4, 151, 165, 182, 104, 33, 82, 87, 33, 86, 124, 244, 253, 92, 60, 183, 7,
    154, 180, 180, 47, 244, 111, 19, 40, 17, 182, 113, 123, 223, 121, 66, 61,
    163, 59, 23, 46, 179, 183, 212, 84, 206, 146, 133, 78, 224, 18, 82, 2, ...>>,
@@ -44,7 +44,7 @@ iex(1)> {public_key, private_key} = ExWallet.Keys.Pair.generate()
 You can use the following function if you have a _private key_ and you want to derive a _public_ one.
 
 ```elixir
-iex(2)> ExWallet.Keys.Pair.to_public_key(private_key)
+iex(2)> ExWallet.KeyPair.to_public_key(private_key)
 <<4, 151, 165, 182, 104, 33, 82, 87, 33, 86, 124, 244, 253, 92, 60, 183, 7, 154,
   180, 180, 47, 244, 111, 19, 40, 17, 182, 113, 123, 223, 121, 66, 61, 163, 59,
   23, 46, 179, 183, 212, 84, 206, 146, 133, 78, 224, 18, 82, 2, 70, ...>>
@@ -159,15 +159,15 @@ iex(16)> ExWallet.Seed.generate(mnemonic, "password")
 
 Notice that, even with the same mnemonic, the generated seed is different with the given password.
 
-### Keys.Master
+### Extended
 
 **`create/1`**
 
 Creates a master private key and a chain code from the given seed.
 
 ```elixir
-iex(17)> %{chain_code: chain_code, key: key} = ExWallet.Keys.Master.create(seed)
-%ExWallet.Keys.Private{
+iex(17)> %{chain_code: chain_code, key: key} = ExWallet.Extended.master(seed)
+%ExWallet.Extended.Private{
   chain_code: <<211, 95, 0, 172, 81, 118, 33, 225, 4, 161, 30, 58, 63, 94, 148,
     207, 233, 247, 216, 42, 155, 95, 136, 65, 219, 158, 48, 71, 187, 75, 232,
     121>>,
@@ -182,14 +182,14 @@ iex(17)> %{chain_code: chain_code, key: key} = ExWallet.Keys.Master.create(seed)
 }
 ```
 
-### Keys.Extended
+### Extended
 
 **`private/3`**
 
 Serializes the given private key with its chain code in the `Base58` representation.
 
 ```elixir
-iex(18)> ExWallet.Keys.Extended.private(key, chain_code, :main)
+iex(18)> ExWallet.Extended.private(key, chain_code, :main)
 "xprv9s21ZrQH143K3NAHGAnTnNnTgQC3Q2A9H45DxCqSBuvvpNtGqLcrwLQjd4omvTpD5pxjjuuuZJ9gHAVYf3gzq7TZEBRtrFpKwQq8PS6BUMh"
 ```
 
@@ -198,24 +198,24 @@ iex(18)> ExWallet.Keys.Extended.private(key, chain_code, :main)
 Serializes the given public key with its chain code in the `Base58` representation.
 
 ```elixir
-iex(19)> public_key = ExWallet.Keys.Pair.to_public_key(key)
+iex(19)> public_key = ExWallet.KeyPair.to_public_key(key)
 <<4, 170, 46, 81, 121, 215, 188, 41, 99, 37, 107, 147, 0, 225, 12, 220, 193, 96,
   169, 223, 53, 191, 156, 45, 110, 101, 147, 179, 134, 1, 75, 169, 79, 238, 199,
   52, 14, 93, 94, 150, 83, 19, 111, 11, 197, 87, 161, 113, 65, 13, ...>>
 
-iex(20)> ExWallet.Keys.Extended.public(public_key, chain_code, :test)
+iex(20)> ExWallet.Extended.public(public_key, chain_code, :test)
 "tpubD6NzVbkrYhZ4XeRbpPJZMS4ZZZ8BnsP4Bub879JC6ADoSTt8T6nCdaQ3iMRWXCFduPMwoNo9hA6SR3jK96b23gSeebSaHX9tixVVWFNoQnT"
 ```
 
-### Keys.Public
+### Extended.Public
 
 **`new/6`**
 
 Creates a new public extended key struct with the given params.
 
 ```elixir
-iex(21)> ExWallet.Keys.Public.new(:main, key, chain_code)
-%ExWallet.Keys.Public{
+iex(21)> ExWallet.Extended.Public.new(:main, key, chain_code)
+%ExWallet.Extended.Public{
   chain_code: <<230, 125, 124, 99, 28, 250, 75, 124, 12, 51, 140, 0, 243, 64,
     111, 227, 169, 73, 152, 111, 175, 136, 252, 11, 126, 58, 46, 143, 146, 72,
     238, 242>>,
@@ -229,15 +229,15 @@ iex(21)> ExWallet.Keys.Public.new(:main, key, chain_code)
 }
 ```
 
-### Keys.Private
+### Extended.Private
 
 **`new/6`**
 
 Creates a new private extended key struct with the given params.
 
 ```elixir
-iex(22)> ExWallet.Keys.Private.new(:test, key, chain_code)
-%ExWallet.Keys.Private{
+iex(22)> ExWallet.Extended.Private.new(:test, key, chain_code)
+%ExWallet.Extended.Private{
   chain_code: <<230, 125, 124, 99, 28, 250, 75, 124, 12, 51, 140, 0, 243, 64,
     111, 227, 169, 73, 152, 111, 175, 136, 252, 11, 126, 58, 46, 143, 146, 72,
     238, 242>>,
