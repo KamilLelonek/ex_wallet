@@ -92,11 +92,11 @@ defmodule ExWallet.Extended.Children do
     |> build_child(private_key, child_chain, index)
   end
 
-  def elliptic_curve_point_addition(
-        <<derived_key::binary-32, child_chain::binary>>,
-        %Public{key: key} = public_key,
-        index
-      ) do
+  defp elliptic_curve_point_addition(
+         <<derived_key::binary-32, child_chain::binary>>,
+         %Public{key: key} = public_key,
+         index
+       ) do
     key
     |> :libsecp256k1.ec_pubkey_tweak_add(derived_key)
     |> elem(1)
