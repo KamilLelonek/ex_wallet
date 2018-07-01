@@ -93,7 +93,7 @@ iex(9)> ExWallet.Base58.Encode.call("k")
 
 **`calculate/1`**
 
-You are able to calculate a Bitcoin Address using your _private key_:
+You are able to calculate a **Bitcoin Address** using your _private key_:
 
 ```elixir
 iex(10)> ExWallet.Address.calculate(private_key)
@@ -104,7 +104,7 @@ iex(10)> ExWallet.Address.calculate(private_key)
 
 **`generate/1`**
 
-You can generate a random mnemonic words for the given entropy length (`256` is the default).
+You can generate a random _mnemonic words_ for the given _entropy_ length (`256` is the default).
 
 ```elixir
 iex(11)> ExWallet.Mnemonic.Advanced.generate()
@@ -116,7 +116,7 @@ iex(12)> mnemonic = ExWallet.Mnemonic.Advanced.generate(128)
 
 **`from_entropy/1`**
 
-However, if you already have some random entropy, you can derive a mnemonic from it:
+However, if you already have some random entropy, you can derive a _mnemonic_ from it:
 
 ```elixir
 iex(13)> entropy = "00000000000000000000000000000000"
@@ -128,7 +128,7 @@ iex(14)> ExWallet.Mnemonic.Advanced.from_entropy(entropy)
 
 **`to_entropy/1`**
 
-And, once you have your mnemonic words, you can turn them back into the corresponding sequence of bytes:
+And, once you have your _mnemonic words_, you can turn them back into the corresponding sequence of bytes:
 
 ```elixir
 iex(14)> ExWallet.Mnemonic.Advanced.to_entropy(mnemonic)
@@ -143,7 +143,7 @@ It has identical interface as `Advanced` above, and, as you can guess, provides 
 
 **`generate/2`**
 
-From the generated mnemonic, you can create a seed which can be later used to derive your keys in HD wallet. To do that, just call:
+From the generated mnemonic, you can create a seed which can be later used to derive your keys in HD _wallet_. To do that, just call:
 
 ```elixir
 iex(15)> seed = ExWallet.Seed.generate(mnemonic)
@@ -157,13 +157,13 @@ iex(16)> ExWallet.Seed.generate(mnemonic, "password")
 "78cf455898d8647080e0b6ba92b39c6bea1f115994c5945bca8dc8dffa2d9a428b2aef255cfeaefd381bdd5fb8aef6dae1793a169abeba481cc9ec9ded664514"
 ```
 
-Notice that, even with the same mnemonic, the generated seed is different with the given password.
+Notice that, even with the same _mnemonic_, the generated _seed_ is different with the given password.
 
 ### Extended
 
 **`master/1`**
 
-Creates a master private key and a chain code from the given seed.
+Creates a _master private key_ and a _chain code_ from the given _seed_.
 
 ```elixir
 iex(17)> master_key = ExWallet.Extended.master(seed)
@@ -211,7 +211,7 @@ iex(20)> ExWallet.Extended.serialize(public_key)
 
 **`to_public_key/1`**
 
-Converts the given extended private key to the public one.
+Converts the given _extended private key_ to the public one.
 
 ```elixir
 iex(21)> ExWallet.Extended.to_public_key(master_key)
@@ -234,7 +234,7 @@ iex(21)> ExWallet.Extended.to_public_key(master_key)
 
 **`new/6`**
 
-Creates a new public extended key struct with the given params.
+Creates a new _extended public key_ struct with the given params.
 
 ```elixir
 iex(22)> ExWallet.Extended.Public.new(:main, key, chain_code)
@@ -256,7 +256,7 @@ iex(22)> ExWallet.Extended.Public.new(:main, key, chain_code)
 
 **`new/6`**
 
-Creates a new private extended key struct with the given params.
+Creates a new _extended private key_ struct with the given params.
 
 ```elixir
 iex(23)> ExWallet.Extended.Private.new(:test, key, chain_code)
@@ -272,4 +272,75 @@ iex(23)> ExWallet.Extended.Private.new(:test, key, chain_code)
   network: :test,
   version_number: <<4, 53, 131, 148>>
 }
+```
+
+### Extended.Children
+
+**`derive/2`**
+
+Derives _public_ or _private child key_ from the given _master key_ based on the specific _chain_.
+
+Private to Private Hardened:
+
+```elixir
+iex(23)> ExWallet.Extended.Children.derive(master_key, "m/0'/1")
+%ExWallet.Extended.Private{
+  chain_code: <<9, 195, 92, 71, 136, 21, 39, 116, 10, 68, 125, 72, 219, 217,
+    173, 226, 21, 132, 198, 64, 219, 89, 58, 111, 108, 78, 195, 13, 240, 106,
+    161, 84>>,
+  child_number: 1,
+  depth: 2,
+  fingerprint: <<86, 241, 214, 41>>,
+  key: <<210, 55, 243, 180, 11, 7, 41, 12, 126, 193, 186, 225, 51, 193, 74, 255,
+    88, 44, 30, 77, 117, 36, 223, 72, 160, 233, 194, 92, 106, 131, 168, 40>>,
+  network: :main,
+  version_number: <<4, 136, 173, 228>>
+}
+```
+
+Private to Public Hardened:
+
+```elixir
+iex(24)> ExWallet.Extended.Children.derive(master_key, "M/0'")
+%ExWallet.Extended.Public{
+  chain_code: <<56, 236, 184, 130, 50, 173, 70, 194, 18, 255, 38, 105, 176, 162,
+    77, 93, 194, 215, 84, 161, 108, 241, 107, 203, 87, 145, 57, 209, 181, 119,
+    21, 62>>,
+  child_number: 2147483648,
+  depth: 1,
+  fingerprint: <<236, 39, 144, 106>>,
+  key: <<4, 112, 255, 93, 55, 8, 241, 185, 89, 51, 71, 173, 187, 222, 172, 218,
+    46, 215, 108, 57, 223, 20, 123, 177, 187, 144, 210, 106, 233, 106, 106, 117,
+    108, 231, 244, 224, 90, 87, 255, 197, 207, 112, 90, 255, 217, ...>>,
+  network: :main,
+  version_number: <<4, 136, 178, 30>>
+}
+```
+
+Public to Public:
+
+```elixir
+iex(25)> master_key |> ExWallet.Extended.to_public_key() |> ExWallet.Extended.Children.derive("M/100")
+%ExWallet.Extended.Public{
+  chain_code: <<59, 227, 171, 8, 162, 89, 114, 70, 199, 64, 150, 220, 184, 44,
+    92, 230, 114, 174, 24, 146, 230, 21, 42, 20, 27, 150, 11, 52, 24, 182, 84,
+    56>>,
+  child_number: 100,
+  depth: 1,
+  fingerprint: <<236, 39, 144, 106>>,
+  key: <<4, 240, 125, 84, 166, 82, 126, 184, 67, 34, 134, 229, 193, 205, 246,
+    115, 56, 157, 67, 98, 125, 90, 129, 50, 104, 81, 213, 118, 238, 191, 138,
+    206, 45, 106, 39, 238, 137, 130, 61, 150, 160, 248, 43, 57, 61, ...>>,
+  network: :main,
+  version_number: <<4, 136, 178, 30>>
+}
+```
+
+Public to Public Hardened:
+
+```elixir
+iex(26)> master_key |> ExWallet.Extended.to_public_key() |> ExWallet.Extended.Children.derive("m/0'")
+** (RuntimeError) Cannot derive Public Hardened Child!
+    (ex_wallet) lib/ex_wallet/extended/children.ex:72: ExWallet.Extended.Children.derive_key/2
+    (ex_wallet) lib/ex_wallet/extended/children.ex:45: ExWallet.Extended.Children.derive_pathlist/3
 ```
