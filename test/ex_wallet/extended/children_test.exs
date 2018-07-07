@@ -96,19 +96,6 @@ defmodule ExWallet.Extended.ChildrenTest do
              derive(master_key, "m/0/2147483647'/1/2147483646'/2")
   end
 
-  test "should not derive Public Hardened Child" do
-    assert_raise(
-      RuntimeError,
-      "Cannot derive Public Hardened Child!",
-      fn ->
-        ""
-        |> Extended.master()
-        |> Children.derive("M/0'/1/2'")
-        |> Children.derive("M/100'")
-      end
-    )
-  end
-
   describe "Test vector 3" do
     test "should verify the retention of leading zeros" do
       seed =
@@ -131,6 +118,35 @@ defmodule ExWallet.Extended.ChildrenTest do
       # m/0h
       assert "xprv9uPDJpEQgRQfDcW7BkF7eTya6RPxXeJCqCJGHuCJ4GiRVLzkTXBAJMu2qaMWPrS7AANYqdq6vcBcBUdJCVVFceUvJFjaPdGZ2y9WACViL4L" =
                derive(master_key, "m/0'")
+    end
+  end
+
+  describe "failure" do
+    test "should not derive Public Hardened Child" do
+      assert_raise(
+        RuntimeError,
+        "Cannot derive Public Hardened Child!",
+        fn ->
+          ""
+          |> Extended.master()
+          |> Children.derive("M/0'/1/2'")
+          |> Children.derive("M/100'")
+        end
+      )
+    end
+
+    test "should not derive Private Child from a Public Parent" do
+      assert_raise(
+        RuntimeError,
+        "Cannot derive Private Child from a Public Parent!",
+        fn ->
+          ""
+          |> Extended.master()
+          |> Extended.to_public_key()
+          |> Children.derive("m/0/0/0")
+          |> IO.inspect()
+        end
+      )
     end
   end
 
