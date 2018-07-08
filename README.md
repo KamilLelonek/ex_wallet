@@ -166,7 +166,7 @@ Notice that, even with the same _mnemonic_, the generated _seed_ is different wi
 Creates a _master private key_ and a _chain code_ from the given _seed_.
 
 ```elixir
-iex(17)> master_key = ExWallet.Extended.master(seed)
+iex(17)> %{chain_code: chain_code, key: key} = master_key = ExWallet.Extended.master(seed)
 %ExWallet.Extended.Private{
   chain_code: <<211, 95, 0, 172, 81, 118, 33, 225, 4, 161, 30, 58, 63, 94, 148,
     207, 233, 247, 216, 42, 155, 95, 136, 65, 219, 158, 48, 71, 187, 75, 232,
@@ -320,7 +320,7 @@ iex(24)> ExWallet.Extended.Children.derive(master_key, "M/0'")
 Public to Public:
 
 ```elixir
-iex(25)> master_key |> ExWallet.Extended.to_public_key() |> ExWallet.Extended.Children.derive("M/100")
+iex(25)> master_key |> ExWallet.Extended.Private.to_public() |> ExWallet.Extended.Children.derive("M/100")
 %ExWallet.Extended.Public{
   chain_code: <<59, 227, 171, 8, 162, 89, 114, 70, 199, 64, 150, 220, 184, 44,
     92, 230, 114, 174, 24, 146, 230, 21, 42, 20, 27, 150, 11, 52, 24, 182, 84,
