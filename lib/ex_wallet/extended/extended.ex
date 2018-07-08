@@ -1,5 +1,5 @@
 defmodule ExWallet.Extended do
-  alias ExWallet.{Base58, KeyPair, Crypto}
+  alias ExWallet.{Base58, Crypto, Compression}
   alias ExWallet.Extended.{Private, Public}
 
   def master(seed, network \\ :main) do
@@ -15,56 +15,11 @@ defmodule ExWallet.Extended do
     |> encode_serialize(private_key)
   end
 
-  def serialize(%Public{key: key} = public_key) do
-    key
-    |> compress()
+  def serialize(%Public{} = public_key) do
+    public_key
+    |> Compression.run()
     |> encode_serialize(public_key)
   end
-
-  def to_public_key(%Private{
-        network: network,
-        key: key,
-        chain_code: chain_code,
-        depth: depth,
-        fingerprint: fingerprint,
-        child_number: child_number
-      }) do
-    Public.new(
-      network,
-      KeyPair.to_public_key(key),
-      chain_code,
-      depth,
-      fingerprint,
-      child_number
-    )
-  end
-
-  def compress(<<_prefix::8, x_coordinate::256, y_coordinate::256>>) do
-    y_coordinate
-    |> rem(2)
-    |> compress(x_coordinate)
-  end
-
-  def compress(0, x_coordinate), do: <<0x02::8, x_coordinate::256>>
-  def compress(1, x_coordinate), do: <<0x03::8, x_coordinate::256>>
-
-  def fingerprint(%Private{} = key) do
-    key
-    |> to_public_key()
-    |> fingerprint()
-  end
-
-  def fingerprint(%Public{key: key}), do: fingerprint(key)
-
-  def fingerprint(pub_key) do
-    pub_key
-    |> compress()
-    |> Crypto.hash_160()
-    |> take_fingerprint()
-  end
-
-  defp take_fingerprint(<<fingerprint::binary-4, _rest::binary>>),
-    do: fingerprint
 
   defp new_private(<<private_key::binary-32, chain_code::binary-32>>, network),
     do: Private.new(network, private_key, chain_code)
