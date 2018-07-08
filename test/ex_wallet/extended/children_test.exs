@@ -2,7 +2,7 @@ defmodule ExWallet.Extended.ChildrenTest do
   use ExUnit.Case, async: true
 
   alias ExWallet.Extended
-  alias ExWallet.Extended.Children
+  alias ExWallet.Extended.{Children, Private}
 
   test "Test vector 1" do
     seed = "000102030405060708090a0b0c0d0e0f"
@@ -109,7 +109,7 @@ defmodule ExWallet.Extended.ChildrenTest do
 
       # M
       assert "xpub661MyMwAqRbcEZVB4dScxMAdx6d4nFc9nvyvH3v4gJL378CSRZiYmhRoP7mBy6gSPSCYk6SzXPTf3ND1cZAceL7SfJ1Z3GC8vBgp2epUt13" =
-               master_key |> Extended.to_public_key() |> Extended.serialize()
+               master_key |> Private.to_public() |> Extended.serialize()
 
       # M/0h
       assert "xpub68NZiKmJWnxxS6aaHmn81bvJeTESw724CRDs6HbuccFQN9Ku14VQrADWgqbhhTHBaohPX4CjNLf9fq9MYo6oDaPPLPxSb7gwQN3ih19Zm4Y" =
@@ -142,7 +142,7 @@ defmodule ExWallet.Extended.ChildrenTest do
         fn ->
           ""
           |> Extended.master()
-          |> Extended.to_public_key()
+          |> Private.to_public()
           |> Children.derive("m/0/0/0")
           |> IO.inspect()
         end

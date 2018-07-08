@@ -1,5 +1,5 @@
 defmodule ExWallet.Extended.Children do
-  alias ExWallet.{Extended, KeyPair, Crypto}
+  alias ExWallet.{Crypto, Compression, Fingerprint}
   alias ExWallet.Extended.{Private, Public, Pathlist}
 
   @curve_order 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141
@@ -15,7 +15,7 @@ defmodule ExWallet.Extended.Children do
 
   defp derive_pathlist(%Public{} = key, [], :public), do: key
   defp derive_pathlist(%Private{} = key, [], :private), do: key
-  defp derive_pathlist(%Private{} = key, [], :public), do: Extended.to_public_key(key)
+  defp derive_pathlist(%Private{} = key, [], :public), do: Private.to_public(key)
 
   defp derive_pathlist(%Public{}, [], :private),
     do: raise("Cannot derive Private Child from a Public Parent!")
@@ -54,15 +54,7 @@ defmodule ExWallet.Extended.Children do
        do: raise("Cannot derive Public Hardened Child!")
 
   defp compressed_hmac_sha512(chain_code, key, index),
-    do: Crypto.hmac_sha512(chain_code, <<compress(key)::binary, index::32>>)
-
-  defp compress(%Public{key: key}), do: Extended.compress(key)
-
-  defp compress(%Private{key: key}) do
-    key
-    |> KeyPair.to_public_key()
-    |> Extended.compress()
-  end
+    do: Crypto.hmac_sha512(chain_code, <<Compression.run(key)::binary, index::32>>)
 
   defp private_derivation(
          <<derived_key::256, child_chain::binary>>,
@@ -93,7 +85,7 @@ defmodule ExWallet.Extended.Children do
         child_key,
         child_chain,
         depth + 1,
-        Extended.fingerprint(key),
+        Fingerprint.build(key),
         index
       )
     end
