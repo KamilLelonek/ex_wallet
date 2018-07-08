@@ -1,4 +1,6 @@
 defmodule ExWallet.Extended.Private do
+  alias ExWallet.{KeyPair, Extended.Public}
+
   defstruct network: :main,
             version_number: nil,
             key: nil,
@@ -29,5 +31,23 @@ defmodule ExWallet.Extended.Private do
       fingerprint: fingerprint,
       child_number: child_number
     }
+  end
+
+  def to_public(%__MODULE__{
+        network: network,
+        key: key,
+        chain_code: chain_code,
+        depth: depth,
+        fingerprint: fingerprint,
+        child_number: child_number
+      }) do
+    Public.new(
+      network,
+      KeyPair.to_public_key(key),
+      chain_code,
+      depth,
+      fingerprint,
+      child_number
+    )
   end
 end
