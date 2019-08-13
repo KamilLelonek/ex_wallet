@@ -68,6 +68,14 @@ defmodule ExWallet.Extended.Children do
     |> Kernel.+(key)
     |> rem(@curve_order)
     |> :binary.encode_unsigned()
+    |> pad_bytes(32)
+  end
+
+  defp pad_bytes(content, total_bytes) when byte_size(content) >= total_bytes, do: content
+
+  defp pad_bytes(content, total_bytes) do
+    bits = (total_bytes - byte_size(content)) * 8
+    <<0::size(bits)>> <> content
   end
 
   defp elliptic_curve_point_addition(
