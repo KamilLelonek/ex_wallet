@@ -121,6 +121,23 @@ defmodule ExWallet.Extended.ChildrenTest do
     end
   end
 
+  describe "Test vector 4" do
+    test "should pad remainder to 32 bytes after curve order division" do
+      seed =
+        "10e8464a6d8f26cb0ad9d9b9ef1563e0b5984ae8061bdc31b71af28c58fa128339803fc77220d064044401cad0c92207301a8054da7bd5652b8f45be523ffb7b"
+
+      master_key = Extended.master(seed)
+
+      # M/44'/60'/0'/0
+      assert "xpub6F2v1aRTSTWTJiSBJkM7RH4i8nFGYNXz48DMg4iEEWbHvFnyHiydHauX72WN5NesHLNERNAiEC5gf8rDHZtXDm8eiRdcVukekLRMkBwgEWk" =
+                derive(master_key, "M/44'/60'/0'/0")
+
+      # m/44'/60'/0'/0
+      assert "xprvA23Zc4tZc5xA6EMiCip7497yakQn8up8guHksgJcgB4K3TTpkBfNjnb3FjzPyEtVtMyqTE7Dk38PjiD69BKhx4ryVQyfWgacMdekPF1mMM3" =
+                derive(master_key, "m/44'/60'/0'/0")
+    end
+  end
+
   describe "failure" do
     test "should not derive Public Hardened Child" do
       assert_raise(
