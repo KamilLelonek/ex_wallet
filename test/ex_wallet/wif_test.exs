@@ -13,15 +13,13 @@ defmodule ExWallet.WifTest do
         x
       end
       |> Enum.map(&String.to_integer(&1, 16))
-      |> Enum.reverse
-      |> Enum.reduce(<<>>, fn x, acc -> <<x>> <> acc end)
+      |> Enum.reverse()
+      |> Enum.reduce(<<>>, &(<<&1>> <> &2))
 
     [priv: priv]
   end
 
   test "Converts private key into wallet import format", %{priv: priv} do
-    result = Wif.priv_to_wif(priv)
-
-    assert result == "5HueCGU8rMjxEXxiPuD5BDku4MkFqeZyd4dZ1jvhTVqvbTLvyTJ"
+    assert Wif.priv_to_wif(priv) == "5HueCGU8rMjxEXxiPuD5BDku4MkFqeZyd4dZ1jvhTVqvbTLvyTJ"
   end
 end

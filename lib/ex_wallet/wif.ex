@@ -1,14 +1,14 @@
 defmodule ExWallet.Wif do
-  alias ExWallet.Base58
-  alias ExWallet.Extended.Private
+  alias ExWallet.{Base58, Extended.Private}
 
   @prefixes %{
     main: <<0x80>>,
-    test: <<0xef>>
+    test: <<0xEF>>
   }
 
   def priv_to_wif(key, network \\ :main)
   def priv_to_wif(%Private{key: key}, network), do: priv_to_wif(key, network)
+
   def priv_to_wif(key, network) when is_binary(key) do
     key
     |> prepend_symbol(network)
