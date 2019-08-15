@@ -5,7 +5,7 @@ defmodule ExWallet.MixProject do
     [
       app: :ex_wallet,
       version: "0.1.0",
-      elixir: "~> 1.6",
+      elixir: "~> 1.9",
       start_permanent: Mix.env() == :prod,
       elixirc_paths: elixirc_paths(Mix.env()),
       deps: deps()
@@ -20,7 +20,7 @@ defmodule ExWallet.MixProject do
 
   defp deps do
     [
-      {:poison, "~> 3.1"},
+      {:poison, "~> 4.0"},
       {:libsecp256k1, github: "mbrix/libsecp256k1", manager: :rebar}
     ]
   end
