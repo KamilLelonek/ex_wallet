@@ -4,6 +4,7 @@ defmodule ExWallet.Extended.Children do
 
   @curve_order 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141
   @mersenne_prime 2_147_483_647
+  @total_bytes 32
 
   defguardp hardened?(index) when index > @mersenne_prime
   defguardp normal?(index) when index > -1 and index <= @mersenne_prime
@@ -68,13 +69,15 @@ defmodule ExWallet.Extended.Children do
     |> Kernel.+(key)
     |> rem(@curve_order)
     |> :binary.encode_unsigned()
-    |> pad_bytes(32)
+    |> pad_bytes()
   end
 
-  defp pad_bytes(content, total_bytes) when byte_size(content) >= total_bytes, do: content
+  defp pad_bytes(content)
+       when byte_size(content) >= @total_bytes,
+       do: content
 
-  defp pad_bytes(content, total_bytes) do
-    bits = (total_bytes - byte_size(content)) * 8
+  defp pad_bytes(content) do
+    bits = (@total_bytes - byte_size(content)) * 8
     <<0::size(bits)>> <> content
   end
 
