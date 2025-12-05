@@ -1,6 +1,6 @@
 # ex_wallet
 
-[![Build Status](https://travis-ci.com/KamilLelonek/ex_wallet.svg?token=f2crVURbhKfHsgpJjedn&branch=master)](https://travis-ci.com/KamilLelonek/ex_wallet)
+[![Build Status](https://app.travis-ci.com/KamilLelonek/ex_wallet.svg?token=f2crVURbhKfHsgpJjedn&branch=master)](https://app.travis-ci.com/KamilLelonek/ex_wallet)
 
 The intent of this repository is described in the following articles:
 
